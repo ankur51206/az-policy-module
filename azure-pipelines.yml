@@ -1,29 +1,67 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
-trigger:
-- main
-
+name: azpolicy-single
+trigger: none
+ 
+parameters:
+- name: AppName
+  displayName: Application Name
+  default: azpolicy
+  type: string
+- name: AppEnv
+  displayName: Application Environment
+  type: string
+  values:
+  - ut
+  - st
+  - pp
+  - pr
+- name: AppLoc
+  displayName: Application Location
+  type: string
+  default: eastus2
+  values:
+  - eastus2
+- name: RunApply
+  displayName: "Run Terraform Apply"
+  type: boolean
+  default: true
+- name: RunDestroy
+  displayName: "Run Terraform Destroy (Plan Only!)"
+  type: boolean
+  default: false
+ 
+variables:
+- name: destroy
+  value: ${{parameters.RunDestroy}}
+- name: TF_VAR_APP_NAME
+  value: ${{parameters.AppName}}
+- name: TF_VAR_APP_ENV
+  value: ${{parameters.AppEnv}}
+- name: TF_VAR_APP_LOCATION
+  value: ${{parameters.AppLoc}}
+- name: tfenv
+  value: "applz-anthonytesting"
+- name: vars
+  value: "Ankur-ModuleTesting.tfvars"
+- name: plan
+  value: "Ankur-ModuleTesting.tfplan"
+ 
 pool:
   vmImage: ubuntu-latest
-
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
-
-- task: TerraformCLI@0
-  inputs:
-    command: 'init'
-    allowTelemetryCollection: true
-
-- task: TerraformCLI@0
-  inputs:
-    command: 'plan'
-    allowTelemetryCollection: true
+ 
+jobs:
+- job: Create
+  displayName: 'Setup Azure Application Environment'
+  timeoutInMinutes: 720
+  steps:
+  - script: |
+      az login --service-principal --username "$(ARM_CLIENT_ID)" --password "$(ARM_CLIENT_SECRET)" --tenant "$(ARM_TENANT_ID)"
+      az account set -s "$(ARM_SUBSCRIPTION_ID)"
+      terraform init
+      terraform plan
+      az logout
+    displayName: 'tf'
+    env: 
+      ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+      ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+      ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+      ARM_TENANT_ID: $(ARM_TENANT_ID)
