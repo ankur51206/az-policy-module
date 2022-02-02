@@ -103,6 +103,7 @@ module "policy_tags" {
   policy_assignments        = local.policy_assignments
 }
 
+---
 
 # Terraform providers/module information.
 
