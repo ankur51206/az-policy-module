@@ -112,12 +112,11 @@ azurerm_policy_definition: Manages a policy rule definition on a management grou
 azurerm_policy_set_definition:  Policy set definitions (also known as policy initiatives).
 
 
-
-
-
 ```
 
-  ## Inputs
+
+
+## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
