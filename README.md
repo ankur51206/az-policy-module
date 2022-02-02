@@ -1,3 +1,7 @@
+# Azure Policy
+## Usage
+
+```terraform
 
 locals {
 
@@ -99,17 +103,17 @@ module "policy_tags" {
   policy_assignments        = local.policy_assignments
 }
 
-                                       
 
-                                       
-                                       
-                                       
-                                       
-                                       
-                                       
-                                       
-                                       
-                                       
+
+
+
+
+
+
+
+
+
+
   ## Inputs
 
 | Name | Description | Type | Default | Required |
