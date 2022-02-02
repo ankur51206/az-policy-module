@@ -104,14 +104,7 @@ module "policy_tags" {
 }
 
 
-
-
-
-
-
-
-
-
+```
 
 
   ## Inputs
